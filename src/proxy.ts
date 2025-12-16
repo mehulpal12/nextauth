@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server'
 // This function can be marked `async` if using `await` inside
 export function proxy(request: NextRequest) {
     const path = request.nextUrl.pathname;
-    const isPublicPath = ['/login', '/signup'].includes(path);
+    const isPublicPath = ['/login', '/signup', '/verifyemail'].includes(path);
     const token = request.cookies.get('token')?.value || '';
     if(token && isPublicPath){
         const url = request.nextUrl.clone();
@@ -24,6 +24,7 @@ export const config = {
     '/',
     '/profile',
     '/login',
-    '/signup'
+    '/signup',
+    '/verifyemail',
   ],
 }

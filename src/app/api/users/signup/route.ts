@@ -2,6 +2,7 @@ import {connect} from "@/db/db";
 import User from "@/models/userModel";
 import { NextResponse , NextRequest} from "next/server";
 import bcrypt from "bcryptjs";
+import { sendVerificationEmail } from "@/helpers/mailer";
 
 
 
@@ -31,12 +32,16 @@ export async function POST(request: NextRequest) {
         });
 
         // Save user to database
-        await newUser.save();
+       const savedUser =  await newUser.save();
+       console.log(savedUser);
+       
+
+        await sendVerificationEmail({ userId: savedUser._id.toString(), email: savedUser.email, emailType: 'VERIFY' });
 
         return NextResponse.json({
             message: "User created successfully",
             success: true,
-            user: newUser
+            user: savedUser
         });
     } catch (error:any) {
         return NextResponse.json({error: error.message}, {status: 500});  
